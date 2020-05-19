@@ -1,0 +1,72 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+//Первое задание
+class Figure{
+public:
+    virtual void area() = 0;
+
+};
+class Parallelogram : public Figure{
+protected:
+    double high;
+    double length;
+public:
+    Parallelogram(int h, int a){
+        high = h;
+        length = a;
+    }
+    void area() override{
+        cout<<"Sp = a * h = "<< length <<" * "<< high << " = " << high*length<<endl;
+    };
+};
+class Circle : public Figure{
+private:
+    static constexpr double pi = 3.14;
+    double Radius;
+public:
+    Circle(double R):Radius(R){}
+    void area() override{
+        cout<< "Sc = pi * R^2 = "<<pi << " * " << Radius<< "^2 = "<< pi*pow(Radius,2)<<endl;
+    };
+};
+class Rectangle : Parallelogram{
+public:
+    Rectangle(int a, int b):Parallelogram(a,b){
+        high = a;
+        length = b;
+    }
+    void area() override{
+        cout << "Sr = a * b = "<<high<<" * "<<length <<" = "<< high*length<<endl;
+    };
+
+};
+class Rhombus : Parallelogram{
+
+public:
+    Rhombus(double d1, double d2):Parallelogram(d1,d2){
+
+    }
+    void area() override{
+        cout<<"Srh = (d1 * d2)/2 = "<< "(" <<high<<" * "<<length<<")/2 = "<<high*length/2<<endl;
+    };
+
+};
+
+int main()
+{
+    Parallelogram Sp (5,4);
+    Circle Sc (2.2);
+    Rectangle Sr(8,2);
+    Rhombus Srh(5,5);
+    Figure * squareP = &Sp;
+    squareP ->area();
+    Sc.area();
+    Sr.area();
+    Rhombus & squareRh = Srh;
+    squareRh.area();
+
+    return 0;
+}
