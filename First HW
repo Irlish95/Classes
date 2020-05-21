@@ -55,8 +55,182 @@ public:
 
 };
 
+//Второе задание
+class Car{
+protected:
+    string company;
+    string model;
+public:
+    Car(){}
+
+    Car(string company, string model){
+        cout<<"Company: "<<company<< "; Model: " <<model<< "." << endl;
+
+    }
+
+};
+
+class PassengerCar : virtual public Car{
+protected:
+   string Class;
+public:
+    PassengerCar(string Class, string company, string model):Car(company,model){
+        cout<< "Class: "<<Class <<", Company: "<<company<< "; Model: " <<model<< "." << endl;
+    }
+
+};
+class Bus : virtual public Car{
+public:
+
+    Bus(string Class,string company, string model):Car(company,model){
+        cout<< "Class: "<<Class <<", Company: "<<company<< "; Model: " <<model<< "." << endl;
+    }
+    virtual~Bus(){}
+};
+class Minivan : public PassengerCar,public Bus{
+public:
+    Minivan(string Class, string company, string model):PassengerCar(Class, company,model), Bus(Class, company, model){
+        cout<< "Class: "<<Class <<", Company: "<<company<< "; Model: " <<model<< "." << endl;
+    }
+};
+
+//Третье задание
+class Fraction{
+private:
+    int numerator;      //Числитель
+    int denominator;    //Знаменатель
+public:
+    Fraction():numerator(3), denominator(5){}
+    Fraction(int n, int d): numerator(n), denominator(d){
+        if (d==0) {
+           cout<<"Fraction wrong."<<endl;
+        }
+    }
+    Fraction(const Fraction & f): numerator(f.getNumerator()), denominator(f.getDenominator()){}
+    int getNumerator()const{
+        return this->numerator;
+    };
+    int getDenominator()const{
+        return this->denominator;
+    };
+    Fraction reduce () const{
+        int n = this->numerator;
+        int d = this->denominator;
+
+        int nabs = n > 0 ? n : -n;
+        int dabs = d > 0 ? d : -d;
+        int min = nabs > dabs ? dabs : nabs;
+        for ( int divider = 2; divider <= min / 2 || divider == 2; ++divider )
+            while ( (n % divider == 0) && (d % divider == 0) ) {
+                n /= divider;
+                d /= divider;
+            }
+        return Fraction(n, d);
+    };
+
+};
+
+
+int getCommonDenominator(const Fraction& f1, const Fraction& f2) {
+    int d1 = f1.getDenominator();
+    int d2 = f2.getDenominator();
+    int tmp;
+
+    while (d2) {
+        tmp = d1 % d2;
+        d1 = d2;
+        d2 = tmp;
+    }
+
+    return ( f1.getDenominator() * f2.getDenominator() ) / d1;
+}
+
+Fraction operator + (int number, const Fraction& frac){
+    return Fraction(number * frac.getDenominator() + frac.getNumerator(), frac.getDenominator() );
+}
+
+Fraction operator + (const Fraction& frac, int number){
+    return number + frac;
+}
+
+Fraction operator + (const Fraction& f1, const Fraction& f2){
+    int denominator = getCommonDenominator(f1, f2);
+    return Fraction(f1.getNumerator() * denominator / f1.getDenominator() + f2.getNumerator() * denominator / f2.getDenominator(), denominator);
+}
+
+Fraction operator - (const Fraction& frac, int number) {
+    return Fraction( frac.getNumerator() - number * frac.getDenominator() , frac.getDenominator() );
+}
+
+Fraction operator - (int number, const Fraction& frac) {
+    return Fraction( number * frac.getDenominator() - frac.getNumerator(), frac.getDenominator() );
+}
+
+Fraction operator - (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return Fraction( f1.getNumerator() * denominator / f1.getDenominator() - f2.getNumerator() * denominator / f2.getDenominator(), denominator );
+}
+
+Fraction operator * (const Fraction& frac, int number) { return Fraction(frac.getNumerator() * number, frac.getDenominator()); }
+Fraction operator * (int number, const Fraction& frac) { return Fraction(frac.getNumerator() * number, frac.getDenominator()); }
+Fraction operator * (const Fraction& f1, const Fraction& f2) { return Fraction(f1.getNumerator() * f2.getNumerator(), f1.getDenominator() * f2.getDenominator()); }
+
+Fraction operator / (const Fraction& frac, int number) { return Fraction(frac.getNumerator(), frac.getDenominator() * number); }
+Fraction operator / (int number, const Fraction& frac) { return Fraction(number * frac.getDenominator(), frac.getNumerator()); }
+Fraction operator / (const Fraction& f1, const Fraction& f2) { return Fraction(f1.getNumerator() * f2.getDenominator(), f1.getDenominator() * f2.getNumerator()); }
+
+bool operator == (const Fraction& frac, int number) { return frac.getNumerator() == number * frac.getDenominator(); }
+bool operator == (int number, const Fraction& frac) { return number * frac.getDenominator() == frac.getNumerator(); }
+bool operator == (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() == f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+bool operator != (const Fraction& frac, int number) { return frac.getNumerator() != number * frac.getDenominator(); }
+bool operator != (int number, const Fraction& frac) { return number * frac.getDenominator() != frac.getNumerator(); }
+bool operator != (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() != f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+bool operator < (const Fraction& frac, int number) { return frac.getNumerator() < number * frac.getDenominator(); }
+bool operator < (int number, const Fraction& frac) { return number * frac.getDenominator() < frac.getNumerator(); }
+bool operator < (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() < f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+bool operator > (const Fraction& frac, int number) { return frac.getNumerator() > number * frac.getDenominator(); }
+bool operator > (int number, const Fraction& frac) { return number * frac.getDenominator() > frac.getNumerator(); }
+bool operator > (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() > f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+bool operator <= (const Fraction& frac, int number) { return frac.getNumerator() <= number * frac.getDenominator(); }
+bool operator <= (int number, const Fraction& frac) { return number * frac.getDenominator() <= frac.getNumerator(); }
+bool operator <= (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() <= f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+bool operator >= (const Fraction& frac, int number) { return frac.getNumerator() >= number * frac.getDenominator(); }
+bool operator >= (int number, const Fraction& frac) { return number * frac.getDenominator() >= frac.getNumerator(); }
+bool operator >= (const Fraction& f1, const Fraction& f2) {
+    int denominator = getCommonDenominator(f1, f2);
+    return f1.getNumerator() * denominator / f1.getDenominator() >= f2.getNumerator() * denominator / f2.getDenominator();
+}
+
+Fraction operator - (const Fraction& frac) {
+    return Fraction( -frac.getNumerator() , frac.getDenominator() );
+}
+
+
+
+
 int main()
 {
+    // Первое задание
     Parallelogram Sp (5,4);
     Circle Sc (2.2);
     Rectangle Sr(8,2);
@@ -66,7 +240,25 @@ int main()
     Sc.area();
     Sr.area();
     Rhombus & squareRh = Srh;
+    // Второе задание
     squareRh.area();
+    Car car("BMW", "X2");
+    PassengerCar PasCar("Passenger Car","Volkswagen", "Passat");
+    Bus bus("Bus", "Volkswagen", "T1");
+    Minivan("Minivan", "Mersedes-Benz", "XL");
 
+    //Третье задание
+    Fraction f1(5,3);
+    Fraction f2(1,3);
+    Fraction F = f1+f2;
+    cout<<F.getNumerator()<<"/"<<F.getDenominator()<<endl;
+    Fraction F2 = f1/f2;
+    cout<<F2.getNumerator()<<"/"<<F2.getDenominator()<<endl;
+    if(f1>f2){
+        cout<<"F1>F2"<<endl;
+    }
+    Fraction F3 = -f1;
+    cout<<F3.getNumerator()<<"/"<<F3.getDenominator()<<endl;
     return 0;
 }
+
